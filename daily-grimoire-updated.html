@@ -1,0 +1,796 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Daily Grimoire</title>
+<link href="https://fonts.googleapis.com/css2?family=UnifrakturMaguntia&family=IM+Fell+English:ital@0;1&family=Cinzel+Decorative:wght@400;700&family=Cinzel:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --parchment: #f5ead0;
+    --parchment-dark: #e8d5a0;
+    --parchment-deep: #c9a84c;
+    --ink: #1a1208;
+    --ink-faded: #3d2e0e;
+    --crimson: #8b1a1a;
+    --forest: #2d4a2d;
+    --gold: #c8952a;
+    --gold-light: #e8b84b;
+    --border: #8b6914;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: #0e0b06;
+    background-image: radial-gradient(ellipse at 20% 30%, #1a1005 0%, transparent 60%),
+                      radial-gradient(ellipse at 80% 70%, #0a120a 0%, transparent 60%);
+    min-height: 100vh;
+    display: flex; justify-content: center; align-items: flex-start;
+    padding: 2rem 1rem 4rem;
+    font-family: 'IM Fell English', serif;
+  }
+  .grimoire-outer {
+    position: relative; max-width: 780px; width: 100%;
+    display: grid;
+    grid-template-columns: 110px 1fr 110px;
+    grid-template-rows: 120px 1fr 120px;
+    animation: pageReveal 1.4s ease-out forwards; opacity: 0;
+    filter: drop-shadow(0 0 40px rgba(200,149,42,0.15));
+  }
+  @keyframes pageReveal {
+    from { opacity:0; transform: translateY(24px) scale(0.97); }
+    to   { opacity:1; transform: translateY(0) scale(1); }
+  }
+  .border-top-left  { grid-column:1; grid-row:1; }
+  .border-top-center{ grid-column:2; grid-row:1; }
+  .border-top-right { grid-column:3; grid-row:1; }
+  .border-mid-left  { grid-column:1; grid-row:2; }
+  .border-mid-right { grid-column:3; grid-row:2; }
+  .border-bot-left  { grid-column:1; grid-row:3; }
+  .border-bot-center{ grid-column:2; grid-row:3; }
+  .border-bot-right { grid-column:3; grid-row:3; }
+  .border-panel svg { width:100%; height:100%; display:block; }
+  .border-top-left, .border-top-right,
+  .border-bot-left, .border-bot-right,
+  .border-top-center, .border-bot-center,
+  .border-mid-left, .border-mid-right { background: var(--parchment); }
+  .grimoire-content {
+    grid-column:2; grid-row:2;
+    background: var(--parchment);
+    padding: 1.8rem 1.6rem;
+    border-top: 2px solid var(--border);
+    border-bottom: 2px solid var(--border);
+  }
+  .header { text-align:center; margin-bottom:1.2rem; padding-bottom:0.8rem; border-bottom:2px solid var(--border); }
+  .header::after { content:'⁕  ✦  ⁕'; display:block; color:var(--gold); font-size:0.85rem; margin-top:0.4rem; letter-spacing:0.6rem; }
+  .title { font-family:'UnifrakturMaguntia',cursive; font-size:2.6rem; color:var(--ink); text-shadow:2px 2px 0 var(--parchment-dark); line-height:1.1; margin-bottom:0.2rem; }
+  .subtitle { font-family:'Cinzel',serif; font-size:0.6rem; color:var(--ink-faded); letter-spacing:0.25rem; text-transform:uppercase; }
+  .date-row { display:flex; align-items:center; justify-content:center; gap:0.75rem; margin-bottom:1.2rem; font-family:'Cinzel',serif; font-size:0.7rem; color:var(--ink-faded); letter-spacing:0.1rem; }
+  .date-row label { text-transform:uppercase; }
+  #day-input { background:transparent; border:none; border-bottom:1px solid var(--border); font-family:'IM Fell English',serif; font-size:1rem; color:var(--ink); width:200px; text-align:center; outline:none; padding:2px 4px; }
+  #day-input::placeholder { color:var(--parchment-deep); font-style:italic; }
+  .controls { display:flex; gap:0.5rem; margin-bottom:1.2rem; flex-wrap:wrap; }
+  .btn { font-family:'Cinzel',serif; font-size:0.55rem; letter-spacing:0.1rem; text-transform:uppercase; padding:6px 12px; border:1px solid var(--border); background:var(--parchment-dark); color:var(--ink-faded); cursor:pointer; transition:all 0.2s; }
+  .btn:hover { background:var(--ink); color:var(--gold-light); border-color:var(--gold); }
+  .btn-crimson { border-color:var(--crimson); color:var(--crimson); }
+  .btn-crimson:hover { background:var(--crimson); color:var(--parchment); border-color:var(--crimson); }
+  .blocks-container { display:flex; flex-direction:column; }
+  .time-block { display:grid; grid-template-columns:52px 1fr auto; align-items:stretch; min-height:42px; border-bottom:1px solid var(--parchment-dark); transition:background 0.15s; animation:blockIn 0.3s ease-out forwards; }
+  @keyframes blockIn { from{opacity:0;transform:translateX(-6px)} to{opacity:1;transform:translateX(0)} }
+  .time-block:first-child { border-top:1px solid var(--parchment-dark); }
+  .time-block:hover { background:rgba(200,149,42,0.07); }
+  .time-label { font-family:'Cinzel',serif; font-size:0.6rem; color:var(--ink-faded); padding:10px 8px 10px 0; display:flex; align-items:center; border-right:1px solid var(--parchment-dark); margin-right:10px; white-space:nowrap; user-select:none; letter-spacing:0.04rem; }
+  .task-area { display:flex; flex-direction:column; gap:2px; padding:5px 0; min-width:0; }
+  .task-row { display:flex; align-items:center; gap:6px; }
+  .task-check { width:13px; height:13px; border:1px solid var(--border); background:transparent; cursor:pointer; flex-shrink:0; appearance:none; position:relative; transition:all 0.2s; }
+  .task-check:checked { background:var(--forest); border-color:var(--forest); }
+  .task-check:checked::after { content:'✓'; position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); font-size:8px; color:var(--parchment); line-height:1; }
+  .task-input { flex:1; background:transparent; border:none; border-bottom:1px dashed transparent; font-family:'IM Fell English',serif; font-size:0.88rem; color:var(--ink); outline:none; padding:1px 2px; transition:border-color 0.2s; min-width:0; }
+  .task-input:focus { border-bottom-color:var(--gold); }
+  .task-input::placeholder { color:var(--parchment-deep); font-style:italic; }
+  .task-delete { background:none; border:none; color:var(--parchment-dark); cursor:pointer; font-size:0.65rem; padding:0 2px; line-height:1; transition:color 0.2s; opacity:0; flex-shrink:0; }
+  .task-row:hover .task-delete { opacity:1; }
+  .task-delete:hover { color:var(--crimson); }
+  .add-task-btn { background:none; border:none; color:var(--parchment-deep); cursor:pointer; font-family:'Cinzel',serif; font-size:0.52rem; letter-spacing:0.1rem; text-transform:uppercase; padding:2px 0; text-align:left; transition:color 0.2s; }
+  .add-task-btn:hover { color:var(--gold); }
+  .block-actions { display:flex; flex-direction:column; align-items:center; justify-content:center; gap:3px; padding:4px 0 4px 6px; opacity:0; transition:opacity 0.2s; }
+  .time-block:hover .block-actions { opacity:1; }
+  .block-action-btn { background:none; border:none; color:var(--parchment-dark); cursor:pointer; font-size:0.65rem; line-height:1; padding:1px 3px; transition:color 0.15s; }
+  .block-action-btn:hover { color:var(--crimson); }
+  .task-row[draggable="true"] { cursor:grab; }
+  .task-row.drag-over { border-top:2px dashed var(--gold); }
+  .task-row.dragging { opacity:0.4; }
+  .footer-ornament { text-align:center; margin-top:1.2rem; padding-top:0.8rem; border-top:2px solid var(--border); font-family:'UnifrakturMaguntia',cursive; font-size:1.1rem; color:var(--gold); letter-spacing:0.5rem; }
+  .progress-bar { font-family:'Cinzel',serif; font-size:0.6rem; color:var(--ink-faded); letter-spacing:0.08rem; margin-bottom:0.8rem; text-align:center; }
+  .progress-bar span { color:var(--forest); }
+  @media (max-width: 700px) {
+    body { padding: 1rem 0.5rem 2rem; }
+    .grimoire-outer { grid-template-columns: 0 1fr 0; grid-template-rows: 0 1fr 0; }
+    .border-panel { display: none; }
+    .grimoire-content { border-left: 2px solid var(--border); border-right: 2px solid var(--border); padding: 1.2rem 1rem; }
+    .title { font-size: 2rem; }
+    .time-block { grid-template-columns: 44px 1fr auto; min-height: 38px; }
+    .time-label { font-size: 0.55rem; padding: 8px 6px 8px 0; }
+    .btn { padding: 8px 14px; font-size: 0.5rem; }
+  }
+  @media print {
+    body { background: #fff; padding: 0; }
+    .grimoire-outer { filter: none; box-shadow: none; }
+    .border-panel { display: none !important; }
+    .grimoire-outer { grid-template-columns: 0 1fr 0; grid-template-rows: 0 1fr 0; }
+    .controls, .add-task-btn, .task-delete, .block-actions, .block-action-btn { display: none !important; }
+    .task-input { border: none; }
+    .task-check { pointer-events: none; }
+    .progress-bar { margin-top: 0.5rem; }
+  }
+</style>
+</head>
+<body>
+<div class="grimoire-outer">
+
+<!-- TOP LEFT -->
+<div class="border-panel border-top-left">
+<svg viewBox="0 0 110 120" xmlns="http://www.w3.org/2000/svg">
+  <rect width="110" height="120" fill="#f5ead0"/>
+  <path d="M10,120 Q30,90 20,60 Q10,30 40,10" stroke="#2d4a2d" stroke-width="2.5" fill="none"/>
+  <path d="M20,60 Q40,55 50,40" stroke="#2d4a2d" stroke-width="1.5" fill="none"/>
+  <ellipse cx="52" cy="38" rx="8" ry="5" fill="#3a6b3a" transform="rotate(-30 52 38)"/>
+  <path d="M20,80 Q45,75 55,60" stroke="#2d4a2d" stroke-width="1.5" fill="none"/>
+  <ellipse cx="57" cy="58" rx="7" ry="4" fill="#4a7a3a" transform="rotate(20 57 58)"/>
+  <path d="M15,40 Q35,35 42,18" stroke="#2d4a2d" stroke-width="1.5" fill="none"/>
+  <circle cx="43" cy="16" r="5" fill="#8b1a1a"/>
+  <circle cx="50" cy="22" r="3.5" fill="#8b1a1a"/>
+  <!-- butterfly -->
+  <g transform="translate(62,18) rotate(-15)">
+    <ellipse cx="-8" cy="0" rx="10" ry="6" fill="#7a5a9a" opacity="0.85"/>
+    <ellipse cx="8" cy="0" rx="10" ry="6" fill="#7a5a9a" opacity="0.85"/>
+    <ellipse cx="-6" cy="4" rx="6" ry="3" fill="#5a3d7a" opacity="0.7"/>
+    <ellipse cx="6" cy="4" rx="6" ry="3" fill="#5a3d7a" opacity="0.7"/>
+    <line x1="-2" y1="-6" x2="-5" y2="-13" stroke="#1a1208" stroke-width="0.8"/>
+    <line x1="2" y1="-6" x2="5" y2="-13" stroke="#1a1208" stroke-width="0.8"/>
+    <rect x="-1.5" y="-5" width="3" height="10" rx="1" fill="#1a1208"/>
+  </g>
+  <text x="80" y="60" font-size="10" fill="#c8952a" text-anchor="middle">✦</text>
+  <text x="90" y="25" font-size="7" fill="#c8952a" text-anchor="middle">✦</text>
+  <line x1="105" y1="0" x2="105" y2="120" stroke="#8b6914" stroke-width="1.5"/>
+  <line x1="0" y1="115" x2="110" y2="115" stroke="#8b6914" stroke-width="1.5"/>
+  <line x1="100" y1="0" x2="100" y2="120" stroke="#c8952a" stroke-width="0.5" opacity="0.5"/>
+</svg>
+</div>
+
+<!-- TOP CENTER -->
+<div class="border-panel border-top-center">
+<svg viewBox="0 0 560 120" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
+  <rect width="560" height="120" fill="#f5ead0"/>
+  <!-- crescent moon -->
+  <circle cx="280" cy="52" r="32" fill="#c8952a" opacity="0.9"/>
+  <circle cx="294" cy="44" r="25" fill="#f5ead0"/>
+  <!-- stars -->
+  <text x="228" y="42" font-size="14" fill="#c8952a">✦</text>
+  <text x="322" y="38" font-size="10" fill="#c8952a">✦</text>
+  <text x="254" y="22" font-size="8" fill="#c8952a">✦</text>
+  <text x="302" y="72" font-size="8" fill="#c8952a">✦</text>
+  <text x="198" y="62" font-size="7" fill="#c8952a">⁕</text>
+  <text x="348" y="58" font-size="7" fill="#c8952a">⁕</text>
+  <!-- bat -->
+  <g transform="translate(178,42)">
+    <path d="M0,0 C-15,-22 -42,-16 -46,0 C-36,-6 -20,6 0,0Z" fill="#5a3d7a" opacity="0.9"/>
+    <path d="M0,0 C15,-22 42,-16 46,0 C36,-6 20,6 0,0Z" fill="#5a3d7a" opacity="0.9"/>
+    <path d="M0,0 C-8,-5 -8,9 0,11 C8,9 8,-5 0,0Z" fill="#3a2050"/>
+    <circle cx="-4" cy="-3" r="2.5" fill="#c8952a"/>
+    <circle cx="4" cy="-3" r="2.5" fill="#c8952a"/>
+    <circle cx="-4" cy="-3" r="1" fill="#1a1208"/>
+    <circle cx="4" cy="-3" r="1" fill="#1a1208"/>
+  </g>
+  <!-- foliage left -->
+  <path d="M0,115 Q80,78 160,92 Q210,104 238,88" stroke="#2d4a2d" stroke-width="2" fill="none"/>
+  <ellipse cx="90" cy="80" rx="11" ry="5" fill="#3a6b3a" transform="rotate(-20 90 80)"/>
+  <ellipse cx="170" cy="91" rx="9" ry="4" fill="#4a7a3a" transform="rotate(10 170 91)"/>
+  <circle cx="58" cy="88" r="5" fill="#8b1a1a"/>
+  <circle cx="64" cy="82" r="3.5" fill="#8b1a1a"/>
+  <!-- foliage right -->
+  <path d="M560,115 Q480,78 400,92 Q350,104 322,88" stroke="#2d4a2d" stroke-width="2" fill="none"/>
+  <ellipse cx="470" cy="80" rx="11" ry="5" fill="#3a6b3a" transform="rotate(20 470 80)"/>
+  <ellipse cx="390" cy="91" rx="9" ry="4" fill="#4a7a3a" transform="rotate(-10 390 91)"/>
+  <circle cx="502" cy="88" r="5" fill="#c8952a"/>
+  <!-- iris left -->
+  <g transform="translate(138,58)">
+    <line x1="0" y1="0" x2="0" y2="52" stroke="#2d4a2d" stroke-width="2"/>
+    <path d="M0,8 C-13,-6 -20,10 0,22 C20,10 13,-6 0,8Z" fill="#7a6aaa"/>
+    <path d="M0,24 C-11,10 -17,24 0,36 C17,24 11,10 0,24Z" fill="#5a4a8a" opacity="0.8"/>
+    <ellipse cx="-15" cy="32" rx="7" ry="9" fill="#2d4a2d" transform="rotate(-30 -15 32)"/>
+    <ellipse cx="15" cy="32" rx="7" ry="9" fill="#2d4a2d" transform="rotate(30 15 32)"/>
+  </g>
+  <!-- iris right -->
+  <g transform="translate(422,58)">
+    <line x1="0" y1="0" x2="0" y2="52" stroke="#2d4a2d" stroke-width="2"/>
+    <path d="M0,8 C-13,-6 -20,10 0,22 C20,10 13,-6 0,8Z" fill="#7a6aaa"/>
+    <path d="M0,24 C-11,10 -17,24 0,36 C17,24 11,10 0,24Z" fill="#5a4a8a" opacity="0.8"/>
+    <ellipse cx="-15" cy="32" rx="7" ry="9" fill="#2d4a2d" transform="rotate(-30 -15 32)"/>
+    <ellipse cx="15" cy="32" rx="7" ry="9" fill="#2d4a2d" transform="rotate(30 15 32)"/>
+  </g>
+  <line x1="0" y1="115" x2="560" y2="115" stroke="#8b6914" stroke-width="1.5"/>
+</svg>
+</div>
+
+<!-- TOP RIGHT -->
+<div class="border-panel border-top-right">
+<svg viewBox="0 0 110 120" xmlns="http://www.w3.org/2000/svg">
+  <rect width="110" height="120" fill="#f5ead0"/>
+  <path d="M100,120 Q80,90 90,60 Q100,30 70,10" stroke="#2d4a2d" stroke-width="2.5" fill="none"/>
+  <path d="M90,60 Q65,55 55,40" stroke="#2d4a2d" stroke-width="1.5" fill="none"/>
+  <ellipse cx="53" cy="38" rx="8" ry="5" fill="#3a6b3a" transform="rotate(30 53 38)"/>
+  <path d="M90,80 Q62,75 52,60" stroke="#2d4a2d" stroke-width="1.5" fill="none"/>
+  <ellipse cx="50" cy="58" rx="7" ry="4" fill="#4a7a3a" transform="rotate(-20 50 58)"/>
+  <path d="M95,40 Q72,35 65,18" stroke="#2d4a2d" stroke-width="1.5" fill="none"/>
+  <circle cx="63" cy="15" r="5" fill="#c8952a"/>
+  <circle cx="56" cy="22" r="3.5" fill="#c8952a"/>
+  <!-- large gold butterfly -->
+  <g transform="translate(42,20) rotate(15)">
+    <ellipse cx="-11" cy="0" rx="13" ry="8" fill="#e8b84b" opacity="0.85"/>
+    <ellipse cx="11" cy="0" rx="13" ry="8" fill="#e8b84b" opacity="0.85"/>
+    <ellipse cx="-8" cy="6" rx="8" ry="5" fill="#c8952a" opacity="0.7"/>
+    <ellipse cx="8" cy="6" rx="8" ry="5" fill="#c8952a" opacity="0.7"/>
+    <circle cx="-12" cy="-2" r="2" fill="#8b6914" opacity="0.6"/>
+    <circle cx="12" cy="-2" r="2" fill="#8b6914" opacity="0.6"/>
+    <line x1="-2" y1="-8" x2="-7" y2="-18" stroke="#1a1208" stroke-width="0.8"/>
+    <line x1="2" y1="-8" x2="7" y2="-18" stroke="#1a1208" stroke-width="0.8"/>
+    <rect x="-1.5" y="-7" width="3" height="13" rx="1" fill="#1a1208"/>
+  </g>
+  <text x="28" y="58" font-size="10" fill="#c8952a" text-anchor="middle">✦</text>
+  <text x="18" y="25" font-size="7" fill="#c8952a" text-anchor="middle">✦</text>
+  <line x1="5" y1="0" x2="5" y2="120" stroke="#8b6914" stroke-width="1.5"/>
+  <line x1="0" y1="115" x2="110" y2="115" stroke="#8b6914" stroke-width="1.5"/>
+  <line x1="10" y1="0" x2="10" y2="120" stroke="#c8952a" stroke-width="0.5" opacity="0.5"/>
+</svg>
+</div>
+
+<!-- MID LEFT: dragon + sword + foliage -->
+<div class="border-panel border-mid-left">
+<svg viewBox="0 0 110 600" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
+  <rect width="110" height="600" fill="#f5ead0"/>
+  <path d="M55,0 Q32,70 48,140 Q68,210 44,280 Q24,350 54,420 Q78,490 50,560 Q34,580 55,600" stroke="#2d4a2d" stroke-width="3" fill="none"/>
+  <ellipse cx="68" cy="100" rx="13" ry="6" fill="#3a6b3a" transform="rotate(40 68 100)"/>
+  <ellipse cx="36" cy="170" rx="11" ry="5" fill="#4a7a3a" transform="rotate(-30 36 170)"/>
+  <ellipse cx="70" cy="240" rx="13" ry="6" fill="#2d5a2d" transform="rotate(25 70 240)"/>
+  <ellipse cx="32" cy="310" rx="10" ry="5" fill="#3a6b3a" transform="rotate(-40 32 310)"/>
+  <ellipse cx="74" cy="380" rx="12" ry="6" fill="#4a7a3a" transform="rotate(35 74 380)"/>
+  <ellipse cx="36" cy="450" rx="11" ry="5" fill="#2d5a2d" transform="rotate(-25 36 450)"/>
+  <ellipse cx="68" cy="520" rx="13" ry="6" fill="#3a6b3a" transform="rotate(30 68 520)"/>
+  <circle cx="78" cy="140" r="5" fill="#8b1a1a"/>
+  <circle cx="72" cy="148" r="4" fill="#8b1a1a"/>
+  <circle cx="28" cy="280" r="5" fill="#8b1a1a"/>
+  <circle cx="34" cy="288" r="4" fill="#c8952a"/>
+  <circle cx="80" cy="420" r="5" fill="#c8952a"/>
+  <circle cx="74" cy="428" r="4" fill="#8b1a1a"/>
+  <!-- DRAGON body -->
+  <g transform="translate(55, 200)">
+    <path d="M0,90 C-18,65 -22,35 -12,0 C-6,-22 12,-32 17,-10 C22,14 10,48 0,90Z" fill="#4a8a3a" stroke="#2d5a2d" stroke-width="1"/>
+    <path d="M-9,0 C-17,-22 -12,-50 0,-62" stroke="#4a8a3a" stroke-width="9" fill="none" stroke-linecap="round"/>
+    <ellipse cx="2" cy="-70" rx="14" ry="9" fill="#4a8a3a" stroke="#2d5a2d" stroke-width="1"/>
+    <path d="M12,-68 L26,-66 L22,-76 Z" fill="#3a7a2a"/>
+    <circle cx="-2" cy="-74" r="3.5" fill="#c8952a"/>
+    <circle cx="-1" cy="-74" r="1.8" fill="#1a1208"/>
+    <circle cx="-0.5" cy="-74.5" r="0.6" fill="#fff"/>
+    <path d="M20,-67 C28,-62 32,-54 25,-50" stroke="#e8b84b" stroke-width="1.8" fill="none"/>
+    <path d="M22,-66 C32,-58 30,-48 22,-45" stroke="#8b1a1a" stroke-width="1.2" fill="none"/>
+    <path d="M24,-65 C30,-56 28,-48 22,-46" stroke="#c8952a" stroke-width="0.8" fill="none"/>
+    <path d="M-4,-78 L-8,-92 L-2,-82" fill="#2d5a2d"/>
+    <path d="M4,-76 L10,-88 L6,-80" fill="#2d5a2d"/>
+    <path d="M5,22 C28,2 46,-8 50,8 C44,20 26,30 5,22Z" fill="#5a9a4a" stroke="#2d5a2d" stroke-width="0.8"/>
+    <path d="M5,22 C-12,4 -28,-8 -34,8 C-28,20 -12,30 5,22Z" fill="#5a9a4a" stroke="#2d5a2d" stroke-width="0.8" opacity="0.7"/>
+    <line x1="5" y1="22" x2="44" y2="2" stroke="#2d5a2d" stroke-width="0.6"/>
+    <line x1="5" y1="22" x2="42" y2="10" stroke="#2d5a2d" stroke-width="0.6"/>
+    <line x1="5" y1="22" x2="32" y2="-4" stroke="#2d5a2d" stroke-width="0.6"/>
+    <line x1="5" y1="22" x2="-28" y2="4" stroke="#2d5a2d" stroke-width="0.6"/>
+    <line x1="5" y1="22" x2="-26" y2="14" stroke="#2d5a2d" stroke-width="0.6"/>
+    <path d="M-4,18 C2,12 10,14 7,22" stroke="#2d5a2d" stroke-width="0.8" fill="none"/>
+    <path d="M-6,36 C0,30 8,32 5,40" stroke="#2d5a2d" stroke-width="0.8" fill="none"/>
+    <path d="M-5,54 C1,48 9,50 6,58" stroke="#2d5a2d" stroke-width="0.8" fill="none"/>
+    <path d="M-4,70 C2,64 10,66 7,74" stroke="#2d5a2d" stroke-width="0.8" fill="none"/>
+    <path d="M-16,70 L-24,84 M-16,70 L-18,86 M-16,70 L-12,85" stroke="#1a1208" stroke-width="1.5" stroke-linecap="round"/>
+    <path d="M8,48 L16,60 M8,48 L12,62 M8,48 L4,62" stroke="#1a1208" stroke-width="1.5" stroke-linecap="round"/>
+    <path d="M-4,90 C-16,122 -10,155 6,166 C18,160 22,132 12,110" stroke="#4a8a3a" stroke-width="7" fill="none" stroke-linecap="round"/>
+    <polygon points="10,108 22,98 14,118" fill="#2d5a2d"/>
+    <polygon points="8,128 20,120 12,138" fill="#2d5a2d"/>
+  </g>
+  <!-- SWORD -->
+  <g transform="translate(55, 440)">
+    <path d="M0,-85 L4,-12 L0,12 L-4,-12 Z" fill="#b8b8d8" stroke="#7878aa" stroke-width="0.8"/>
+    <line x1="0" y1="-80" x2="0" y2="-18" stroke="#9898bb" stroke-width="1.2"/>
+    <path d="M-22,0 Q0,6 22,0 Q0,-6 -22,0Z" fill="#c8952a" stroke="#8b6914" stroke-width="1"/>
+    <circle cx="0" cy="0" r="3" fill="#8b1a1a"/>
+    <rect x="-4.5" y="0" width="9" height="32" rx="2" fill="#5a3010" stroke="#3a1a00" stroke-width="0.8"/>
+    <line x1="-4.5" y1="5" x2="4.5" y2="5" stroke="#c8952a" stroke-width="1"/>
+    <line x1="-4.5" y1="10" x2="4.5" y2="10" stroke="#c8952a" stroke-width="1"/>
+    <line x1="-4.5" y1="15" x2="4.5" y2="15" stroke="#c8952a" stroke-width="1"/>
+    <line x1="-4.5" y1="20" x2="4.5" y2="20" stroke="#c8952a" stroke-width="1"/>
+    <line x1="-4.5" y1="25" x2="4.5" y2="25" stroke="#c8952a" stroke-width="1"/>
+    <ellipse cx="0" cy="37" rx="7" ry="5" fill="#c8952a" stroke="#8b6914" stroke-width="1"/>
+    <text x="8" y="-55" font-size="8" fill="#c8952a">✦</text>
+    <text x="-16" y="-38" font-size="6" fill="#7a6aaa">✦</text>
+    <text x="10" y="-25" font-size="5" fill="#7a6aaa">⁕</text>
+  </g>
+  <!-- sunflower -->
+  <g transform="translate(55, 550)">
+    <line x1="0" y1="12" x2="0" y2="52" stroke="#2d4a2d" stroke-width="2"/>
+    <ellipse cx="18" cy="35" rx="11" ry="5" fill="#3a6b3a" transform="rotate(25 18 35)"/>
+    <circle cx="0" cy="0" r="9" fill="#c8952a"/>
+    <circle cx="0" cy="0" r="5.5" fill="#8b6914"/>
+    <ellipse cx="0" cy="-14" rx="4" ry="7" fill="#e8b84b"/>
+    <ellipse cx="10" cy="-10" rx="4" ry="7" fill="#e8b84b" transform="rotate(51 10 -10)"/>
+    <ellipse cx="13" cy="0" rx="4" ry="7" fill="#e8b84b" transform="rotate(90 13 0)"/>
+    <ellipse cx="10" cy="10" rx="4" ry="7" fill="#e8b84b" transform="rotate(129 10 10)"/>
+    <ellipse cx="0" cy="14" rx="4" ry="7" fill="#e8b84b"/>
+    <ellipse cx="-10" cy="10" rx="4" ry="7" fill="#e8b84b" transform="rotate(-129 -10 10)"/>
+    <ellipse cx="-13" cy="0" rx="4" ry="7" fill="#e8b84b" transform="rotate(-90 -13 0)"/>
+    <ellipse cx="-10" cy="-10" rx="4" ry="7" fill="#e8b84b" transform="rotate(-51 -10 -10)"/>
+  </g>
+  <line x1="105" y1="0" x2="105" y2="600" stroke="#8b6914" stroke-width="1.5"/>
+  <line x1="100" y1="0" x2="100" y2="600" stroke="#c8952a" stroke-width="0.5" opacity="0.4"/>
+</svg>
+</div>
+
+<!-- MAIN CONTENT -->
+<div class="grimoire-content">
+  <div class="header">
+    <div class="title">The Daily Grimoire</div>
+    <div class="subtitle">A Chronicle of Hours &amp; Deeds</div>
+  </div>
+  <div class="date-row">
+    <label for="day-input">Day:</label>
+    <input type="text" id="day-input" placeholder="Name thy day..." aria-label="Day or date" oninput="save()"/>
+  </div>
+  <div class="controls">
+    <button class="btn" onclick="addBlockBefore()" aria-label="Add hour before">+ Hour Before</button>
+    <button class="btn" onclick="addBlockAfter()" aria-label="Add hour after">+ Hour After</button>
+    <button class="btn btn-crimson" onclick="clearAllTasks()" aria-label="Clear all tasks">✕ Clear All</button>
+  </div>
+  <div class="progress-bar" id="progress-bar" aria-live="polite"></div>
+  <div class="blocks-container" id="blocks-container"></div>
+  <div class="footer-ornament">✦ ⁕ ✦ ⁕ ✦</div>
+</div>
+
+<!-- MID RIGHT: owl + raven + foliage -->
+<div class="border-panel border-mid-right">
+<svg viewBox="0 0 110 600" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
+  <rect width="110" height="600" fill="#f5ead0"/>
+  <path d="M55,0 Q78,70 62,140 Q40,210 66,280 Q88,350 56,420 Q28,490 60,560 Q76,580 55,600" stroke="#2d4a2d" stroke-width="3" fill="none"/>
+  <ellipse cx="42" cy="100" rx="13" ry="6" fill="#3a6b3a" transform="rotate(-40 42 100)"/>
+  <ellipse cx="74" cy="170" rx="11" ry="5" fill="#4a7a3a" transform="rotate(30 74 170)"/>
+  <ellipse cx="38" cy="240" rx="13" ry="6" fill="#2d5a2d" transform="rotate(-25 38 240)"/>
+  <ellipse cx="76" cy="310" rx="10" ry="5" fill="#3a6b3a" transform="rotate(40 76 310)"/>
+  <ellipse cx="33" cy="380" rx="12" ry="6" fill="#4a7a3a" transform="rotate(-35 33 380)"/>
+  <ellipse cx="74" cy="450" rx="11" ry="5" fill="#2d5a2d" transform="rotate(25 74 450)"/>
+  <ellipse cx="38" cy="520" rx="13" ry="6" fill="#3a6b3a" transform="rotate(-30 38 520)"/>
+  <circle cx="30" cy="140" r="5" fill="#c8952a"/>
+  <circle cx="36" cy="148" r="4" fill="#8b1a1a"/>
+  <circle cx="82" cy="280" r="5" fill="#8b1a1a"/>
+  <circle cx="76" cy="288" r="4" fill="#c8952a"/>
+  <circle cx="28" cy="420" r="5" fill="#8b1a1a"/>
+  <circle cx="80" cy="520" r="5" fill="#c8952a"/>
+  <!-- BARN OWL -->
+  <g transform="translate(55, 85)">
+    <ellipse cx="0" cy="18" rx="22" ry="30" fill="#d4a84b"/>
+    <path d="M-14,10 C-22,5 -26,15 -20,24" stroke="#b8943a" stroke-width="2" fill="none"/>
+    <path d="M14,10 C22,5 26,15 20,24" stroke="#b8943a" stroke-width="2" fill="none"/>
+    <ellipse cx="0" cy="24" rx="14" ry="20" fill="#f0e8c8"/>
+    <circle cx="-5" cy="22" r="2.5" fill="#c8952a" opacity="0.4"/>
+    <circle cx="5" cy="26" r="2.5" fill="#c8952a" opacity="0.4"/>
+    <circle cx="0" cy="32" r="2" fill="#c8952a" opacity="0.4"/>
+    <circle cx="-7" cy="30" r="1.5" fill="#8b6914" opacity="0.3"/>
+    <circle cx="7" cy="30" r="1.5" fill="#8b6914" opacity="0.3"/>
+    <path d="M-22,14 C-38,2 -42,24 -30,36 C-18,28 -8,20 -22,14Z" fill="#b8943a"/>
+    <path d="M22,14 C38,2 42,24 30,36 C18,28 8,20 22,14Z" fill="#b8943a"/>
+    <path d="M-34,14 C-28,18 -22,18 -22,14" stroke="#8b6914" stroke-width="0.8" fill="none"/>
+    <path d="M34,14 C28,18 22,18 22,14" stroke="#8b6914" stroke-width="0.8" fill="none"/>
+    <path d="M0,-10 C-20,-10 -24,8 -16,18 C-8,24 8,24 16,18 C24,8 20,-10 0,-10Z" fill="#f0e8c8" stroke="#c8952a" stroke-width="0.8"/>
+    <circle cx="-7" cy="2" r="7" fill="#1a1208"/>
+    <circle cx="7" cy="2" r="7" fill="#1a1208"/>
+    <circle cx="-6" cy="1" r="3.5" fill="#c8952a"/>
+    <circle cx="8" cy="1" r="3.5" fill="#c8952a"/>
+    <circle cx="-5.5" cy="0.5" r="1.5" fill="#f5ead0"/>
+    <circle cx="8.5" cy="0.5" r="1.5" fill="#f5ead0"/>
+    <path d="M-3,10 L0,16 L3,10Z" fill="#c8952a"/>
+    <path d="M-9,-10 L-14,-24 L-5,-16Z" fill="#8b6914"/>
+    <path d="M9,-10 L14,-24 L5,-16Z" fill="#8b6914"/>
+    <path d="M-8,48 L-14,62 M-8,48 L-8,64 M-8,48 L-3,62" stroke="#8b6914" stroke-width="1.5" stroke-linecap="round"/>
+    <path d="M8,48 L2,62 M8,48 L8,64 M8,48 L14,62" stroke="#8b6914" stroke-width="1.5" stroke-linecap="round"/>
+  </g>
+  <!-- pink flower mid -->
+  <g transform="translate(55, 290)">
+    <line x1="0" y1="0" x2="0" y2="45" stroke="#2d4a2d" stroke-width="2"/>
+    <ellipse cx="0" cy="-14" rx="7" ry="10" fill="#e87a8a"/>
+    <ellipse cx="13" cy="-5" rx="7" ry="10" fill="#e87a8a" transform="rotate(72 0 0)"/>
+    <ellipse cx="8" cy="8" rx="7" ry="10" fill="#d06070" transform="rotate(144 0 0)"/>
+    <ellipse cx="-8" cy="8" rx="7" ry="10" fill="#d06070" transform="rotate(216 0 0)"/>
+    <ellipse cx="-13" cy="-5" rx="7" ry="10" fill="#e87a8a" transform="rotate(288 0 0)"/>
+    <circle cx="0" cy="0" r="6" fill="#c8952a"/>
+    <circle cx="0" cy="0" r="3" fill="#8b6914"/>
+    <ellipse cx="22" cy="25" rx="11" ry="5" fill="#3a6b3a" transform="rotate(25 22 25)"/>
+  </g>
+  <!-- RAVEN -->
+  <g transform="translate(55, 430)">
+    <ellipse cx="0" cy="5" rx="22" ry="30" fill="#4a3a7a"/>
+    <path d="M-22,5 C-32,-12 -28,-34 -12,-30 C-4,-14 -14,12 -22,5Z" fill="#6a5a9a"/>
+    <path d="M22,5 C32,-12 28,-34 12,-30 C4,-14 14,12 22,5Z" fill="#6a5a9a"/>
+    <path d="M-9,33 C-14,52 -9,68 0,74 C9,68 14,52 9,33Z" fill="#3a2d6a"/>
+    <ellipse cx="0" cy="-30" rx="15" ry="13" fill="#4a3a7a"/>
+    <path d="M10,-30 L26,-27 L20,-38 Z" fill="#1a1208"/>
+    <line x1="12" y1="-30" x2="26" y2="-27" stroke="#333" stroke-width="0.8"/>
+    <circle cx="-3" cy="-34" r="5" fill="#1a1208"/>
+    <circle cx="-2" cy="-35" r="2.5" fill="#c8952a"/>
+    <circle cx="-1" cy="-35.5" r="1" fill="#f5ead0"/>
+    <path d="M-16,0 C-10,-12 2,-8 -4,4" stroke="#7a6aaa" stroke-width="1" fill="none"/>
+    <path d="M-14,12 C-8,0 4,4 -2,16" stroke="#7a6aaa" stroke-width="1" fill="none"/>
+    <path d="M-12,22 C-6,10 6,14 0,26" stroke="#8a7aba" stroke-width="1" fill="none"/>
+    <path d="M-7,62 L-12,78 M-7,62 L-7,80 M-7,62 L-2,78" stroke="#1a1208" stroke-width="1.5" stroke-linecap="round"/>
+    <path d="M7,62 L2,78 M7,62 L7,80 M7,62 L12,78" stroke="#1a1208" stroke-width="1.5" stroke-linecap="round"/>
+  </g>
+  <line x1="5" y1="0" x2="5" y2="600" stroke="#8b6914" stroke-width="1.5"/>
+  <line x1="10" y1="0" x2="10" y2="600" stroke="#c8952a" stroke-width="0.5" opacity="0.4"/>
+</svg>
+</div>
+
+<!-- BOTTOM LEFT -->
+<div class="border-panel border-bot-left">
+<svg viewBox="0 0 110 120" xmlns="http://www.w3.org/2000/svg">
+  <rect width="110" height="120" fill="#f5ead0"/>
+  <path d="M55,0 Q38,40 28,78 Q18,100 42,115" stroke="#2d4a2d" stroke-width="2.5" fill="none"/>
+  <ellipse cx="74" cy="52" rx="10" ry="5" fill="#3a6b3a" transform="rotate(20 74 52)"/>
+  <ellipse cx="22" cy="88" rx="9" ry="4" fill="#4a7a3a" transform="rotate(-20 22 88)"/>
+  <g transform="translate(74, 88)">
+    <ellipse cx="0" cy="-7" rx="11" ry="10" fill="#e8d5a0" stroke="#8b6914" stroke-width="1"/>
+    <rect x="-9" y="1" width="18" height="8" rx="2.5" fill="#e8d5a0" stroke="#8b6914" stroke-width="0.8"/>
+    <circle cx="-4.5" cy="-8" r="3.5" fill="#1a1208"/>
+    <circle cx="4.5" cy="-8" r="3.5" fill="#1a1208"/>
+    <circle cx="-4" cy="-8" r="1.2" fill="#7a6aaa" opacity="0.6"/>
+    <circle cx="5" cy="-8" r="1.2" fill="#7a6aaa" opacity="0.6"/>
+    <path d="M-7,2 L-7,8 M-2,2 L-2,9 M3,2 L3,9 M8,2 L8,8" stroke="#8b6914" stroke-width="1"/>
+    <path d="M-2,-17 L0,-12 L2,-17" fill="#c8952a"/>
+  </g>
+  <g transform="translate(28,105)">
+    <ellipse cx="0" cy="-5" rx="8" ry="7" fill="#e8d5a0" stroke="#8b6914" stroke-width="0.8"/>
+    <rect x="-6" y="0" width="12" height="6" rx="2" fill="#e8d5a0" stroke="#8b6914" stroke-width="0.7"/>
+    <circle cx="-3" cy="-5" r="2.5" fill="#1a1208"/>
+    <circle cx="3" cy="-5" r="2.5" fill="#1a1208"/>
+    <path d="M-4,1 L-4,5 M0,1 L0,6 M4,1 L4,5" stroke="#8b6914" stroke-width="0.8"/>
+  </g>
+  <circle cx="55" cy="55" r="10" fill="none" stroke="#7a6aaa" stroke-width="1" stroke-dasharray="3,2"/>
+  <circle cx="55" cy="55" r="6" fill="none" stroke="#c8952a" stroke-width="0.8"/>
+  <text x="55" y="59" font-size="8" fill="#c8952a" text-anchor="middle">✦</text>
+  <line x1="105" y1="0" x2="105" y2="120" stroke="#8b6914" stroke-width="1.5"/>
+  <line x1="0" y1="5" x2="110" y2="5" stroke="#8b6914" stroke-width="1.5"/>
+  <line x1="100" y1="0" x2="100" y2="120" stroke="#c8952a" stroke-width="0.5" opacity="0.4"/>
+</svg>
+</div>
+
+<!-- BOTTOM CENTER -->
+<div class="border-panel border-bot-center">
+<svg viewBox="0 0 560 120" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
+  <rect width="560" height="120" fill="#f5ead0"/>
+  <path d="M0,8 Q140,55 280,32 Q420,12 560,8" stroke="#2d4a2d" stroke-width="2" fill="none"/>
+  <ellipse cx="60" cy="42" rx="12" ry="5" fill="#3a6b3a" transform="rotate(20 60 42)"/>
+  <ellipse cx="178" cy="30" rx="11" ry="4" fill="#4a7a3a" transform="rotate(-15 178 30)"/>
+  <ellipse cx="382" cy="30" rx="11" ry="4" fill="#4a7a3a" transform="rotate(15 382 30)"/>
+  <ellipse cx="500" cy="42" rx="12" ry="5" fill="#3a6b3a" transform="rotate(-20 500 42)"/>
+  <g transform="translate(95, 52)">
+    <rect x="-6" y="-10" width="12" height="6" rx="2" fill="#8b6914"/>
+    <ellipse cx="0" cy="12" rx="15" ry="19" fill="#5a3d9a" opacity="0.88"/>
+    <ellipse cx="0" cy="6" rx="15" ry="6" fill="#7a6aaa" opacity="0.6"/>
+    <path d="M-9,2 C-13,10 -13,22 0,28 C13,22 13,10 9,2" fill="#9a8abb" opacity="0.3"/>
+    <text x="0" y="16" font-size="10" text-anchor="middle" fill="#e8b84b">✦</text>
+    <line x1="-6" y1="-10" x2="6" y2="-10" stroke="#c8952a" stroke-width="1.2"/>
+  </g>
+  <g transform="translate(150, 60)">
+    <rect x="-4" y="-8" width="8" height="5" rx="1.5" fill="#8b6914"/>
+    <ellipse cx="0" cy="10" rx="11" ry="14" fill="#8b1a1a" opacity="0.88"/>
+    <ellipse cx="0" cy="5" rx="11" ry="4" fill="#cc4444" opacity="0.6"/>
+    <path d="M-6,2 C-8,8 -8,16 0,20 C8,16 8,8 6,2" fill="#dd6666" opacity="0.25"/>
+    <line x1="-4" y1="-8" x2="4" y2="-8" stroke="#c8952a" stroke-width="1"/>
+  </g>
+  <g transform="translate(280, 68)">
+    <path d="M0,0 C-22,-6 -52,-4 -58,0 L-58,42 C-52,40 -22,37 0,42 Z" fill="#f0e0b0" stroke="#8b6914" stroke-width="1"/>
+    <path d="M0,0 C22,-6 52,-4 58,0 L58,42 C52,40 22,37 0,42 Z" fill="#f0e0b0" stroke="#8b6914" stroke-width="1"/>
+    <path d="M0,-2 L0,44" stroke="#8b6914" stroke-width="2.5"/>
+    <line x1="-48" y1="10" x2="-8" y2="10" stroke="#c9a84c" stroke-width="0.8"/>
+    <line x1="-48" y1="18" x2="-8" y2="18" stroke="#c9a84c" stroke-width="0.8"/>
+    <line x1="-48" y1="26" x2="-8" y2="26" stroke="#c9a84c" stroke-width="0.8"/>
+    <line x1="-48" y1="34" x2="-22" y2="34" stroke="#c9a84c" stroke-width="0.8"/>
+    <line x1="8" y1="10" x2="48" y2="10" stroke="#c9a84c" stroke-width="0.8"/>
+    <line x1="8" y1="18" x2="48" y2="18" stroke="#c9a84c" stroke-width="0.8"/>
+    <line x1="8" y1="26" x2="48" y2="26" stroke="#c9a84c" stroke-width="0.8"/>
+    <line x1="22" y1="34" x2="48" y2="34" stroke="#c9a84c" stroke-width="0.8"/>
+    <text x="-28" y="8" font-size="8" fill="#c8952a">✦</text>
+    <text x="22" y="8" font-size="7" fill="#8b1a1a" font-family="serif">ᚱ</text>
+    <text x="-45" y="8" font-size="6" fill="#7a6aaa">ᚠ</text>
+    <text x="36" y="8" font-size="6" fill="#7a6aaa">ᚢ</text>
+  </g>
+  <g transform="translate(205, 42)">
+    <rect x="-5" y="0" width="10" height="38" rx="2" fill="#f5f0d8" stroke="#c9a84c" stroke-width="0.8"/>
+    <path d="M-5,6 Q-9,14 -8,20" stroke="#f0e0b0" stroke-width="3.5" fill="none"/>
+    <path d="M5,9 Q9,16 8,22" stroke="#f0e0b0" stroke-width="2.5" fill="none"/>
+    <line x1="0" y1="-6" x2="0" y2="0" stroke="#1a1208" stroke-width="1.2"/>
+    <ellipse cx="0" cy="-13" rx="5" ry="8" fill="#e8b84b" opacity="0.9"/>
+    <ellipse cx="0" cy="-15" rx="2.5" ry="5" fill="#fff8d0"/>
+    <ellipse cx="0" cy="-11" rx="6" ry="10" fill="#c8952a" opacity="0.25"/>
+    <ellipse cx="0" cy="-13" r="14" fill="#e8b84b" opacity="0.06"/>
+    <ellipse cx="0" cy="38" rx="8" ry="3" fill="#c9a84c"/>
+  </g>
+  <g transform="translate(355, 46)">
+    <rect x="-4" y="0" width="8" height="30" rx="2" fill="#f5f0d8" stroke="#c9a84c" stroke-width="0.8"/>
+    <path d="M-4,7 Q-7,13 -6,18" stroke="#f0e0b0" stroke-width="3" fill="none"/>
+    <line x1="0" y1="-5" x2="0" y2="0" stroke="#1a1208" stroke-width="1"/>
+    <ellipse cx="0" cy="-10" rx="4" ry="7" fill="#e8b84b" opacity="0.9"/>
+    <ellipse cx="0" cy="-12" rx="2" ry="4" fill="#fff8d0"/>
+    <ellipse cx="0" cy="-10" rx="5" ry="8" fill="#c8952a" opacity="0.2"/>
+    <ellipse cx="0" cy="30" rx="6" ry="2.5" fill="#c9a84c"/>
+  </g>
+  <g transform="translate(460, 62)">
+    <ellipse cx="0" cy="-9" rx="15" ry="13" fill="#e8d5a0" stroke="#8b6914" stroke-width="1"/>
+    <rect x="-12" y="2" width="24" height="10" rx="3" fill="#e8d5a0" stroke="#8b6914" stroke-width="0.8"/>
+    <circle cx="-6" cy="-10" r="4.5" fill="#1a1208"/>
+    <circle cx="6" cy="-10" r="4.5" fill="#1a1208"/>
+    <circle cx="-5" cy="-10" r="1.8" fill="#7a6aaa" opacity="0.5"/>
+    <circle cx="7" cy="-10" r="1.8" fill="#7a6aaa" opacity="0.5"/>
+    <path d="M-9,3 L-9,11 M-3,3 L-3,12 M3,3 L3,12 M9,3 L9,11" stroke="#8b6914" stroke-width="1.2"/>
+    <path d="M-15,-14 L-10,-26 L-5,-18 L0,-28 L5,-18 L10,-26 L15,-14 Z" fill="#c8952a" stroke="#8b6914" stroke-width="0.8"/>
+    <circle cx="-10" cy="-26" r="2" fill="#8b1a1a"/>
+    <circle cx="0" cy="-28" r="2" fill="#8b1a1a"/>
+    <circle cx="10" cy="-26" r="2" fill="#8b1a1a"/>
+  </g>
+  <text x="50" y="105" font-size="9" fill="#7a6aaa" opacity="0.6">ᚷ</text>
+  <text x="400" y="100" font-size="9" fill="#8b1a1a" opacity="0.6">ᚹ</text>
+  <text x="510" y="100" font-size="8" fill="#c8952a" opacity="0.7">✦</text>
+  <text x="45" y="80" font-size="7" fill="#c8952a" opacity="0.7">⁕</text>
+  <line x1="0" y1="5" x2="560" y2="5" stroke="#8b6914" stroke-width="1.5"/>
+</svg>
+</div>
+
+<!-- BOTTOM RIGHT -->
+<div class="border-panel border-bot-right">
+<svg viewBox="0 0 110 120" xmlns="http://www.w3.org/2000/svg">
+  <rect width="110" height="120" fill="#f5ead0"/>
+  <path d="M55,0 Q72,40 82,78 Q92,100 68,115" stroke="#2d4a2d" stroke-width="2.5" fill="none"/>
+  <ellipse cx="36" cy="52" rx="10" ry="5" fill="#3a6b3a" transform="rotate(-20 36 52)"/>
+  <ellipse cx="88" cy="88" rx="9" ry="4" fill="#4a7a3a" transform="rotate(20 88 88)"/>
+  <g transform="translate(32, 82)">
+    <path d="M0,-22 L18,-14 L18,10 L0,24 L-18,10 L-18,-14 Z" fill="#4a2d6b" stroke="#c8952a" stroke-width="1.5"/>
+    <path d="M0,-19 L15,-12 L15,9 L0,21 L-15,9 L-15,-12 Z" fill="none" stroke="#e8b84b" stroke-width="0.8"/>
+    <line x1="-15" y1="-12" x2="15" y2="-12" stroke="#7a6aaa" stroke-width="0.8"/>
+    <text x="0" y="5" font-size="13" fill="#c8952a" text-anchor="middle" font-family="serif">ᚷ</text>
+    <circle cx="0" cy="-5" r="4" fill="#c8952a" opacity="0.3"/>
+  </g>
+  <g transform="translate(80, 92)">
+    <polygon points="0,-14 10,0 6,12 -6,12 -10,0" fill="#5a3d9a" stroke="#c8952a" stroke-width="0.8"/>
+    <polygon points="0,-14 10,0 0,-2" fill="#7a6aaa"/>
+    <polygon points="-10,0 6,12 0,-2" fill="#4a2d7a"/>
+    <polygon points="10,0 6,12 0,-2" fill="#6a5a9a"/>
+    <line x1="-4" y1="-10" x2="-1" y2="-5" stroke="#e8b84b" stroke-width="0.6" opacity="0.8"/>
+  </g>
+  <text x="55" y="32" font-size="10" fill="#c8952a">✦</text>
+  <text x="72" y="52" font-size="7" fill="#8b1a1a">⁕</text>
+  <line x1="5" y1="0" x2="5" y2="120" stroke="#8b6914" stroke-width="1.5"/>
+  <line x1="0" y1="5" x2="110" y2="5" stroke="#8b6914" stroke-width="1.5"/>
+  <line x1="10" y1="0" x2="10" y2="120" stroke="#c8952a" stroke-width="0.5" opacity="0.4"/>
+</svg>
+</div>
+
+</div><!-- end grimoire-outer -->
+
+<script>
+  // The Daily Grimoire — persistence, progress, print & mobile
+  const STORAGE_KEY = 'daily-grimoire';
+  const defaultTimes = ['8am','9am','10am','11am','12pm','1pm','2pm','3pm','4pm','5pm','6pm','7pm','8pm'];
+  const allTimes = ['12am','1am','2am','3am','4am','5am','6am','7am','8am','9am','10am','11am','12pm',
+                    '1pm','2pm','3pm','4pm','5pm','6pm','7pm','8pm','9pm','10pm','11pm'];
+  let blocks = defaultTimes.map(t => ({ time: t, tasks: [''], completed: {} }));
+
+  function timeToIndex(t) { return allTimes.indexOf(t); }
+
+  function formatToday() {
+    const d = new Date();
+    const days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+    const months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+    return days[d.getDay()] + ', ' + d.getDate() + ' ' + months[d.getMonth()] + ' ' + d.getFullYear();
+  }
+
+  function save() {
+    try {
+      const dayInput = document.getElementById('day-input');
+      localStorage.setItem(STORAGE_KEY, JSON.stringify({
+        day: (dayInput && dayInput.value) ? dayInput.value.trim() : '',
+        blocks: blocks
+      }));
+    } catch (e) {}
+  }
+
+  function load() {
+    try {
+      const dayInput = document.getElementById('day-input');
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if (!raw) {
+        if (dayInput && !dayInput.value.trim()) dayInput.placeholder = formatToday();
+        return;
+      }
+      const data = JSON.parse(raw);
+      if (data.blocks && Array.isArray(data.blocks) && data.blocks.length > 0) {
+        blocks = data.blocks;
+      }
+      if (dayInput) {
+        if (data.day) dayInput.value = data.day;
+        else if (!dayInput.value.trim()) dayInput.placeholder = formatToday();
+      }
+    } catch (e) {}
+  }
+
+  function updateProgress() {
+    let total = 0, done = 0;
+    blocks.forEach(b => {
+      b.tasks.forEach((t, i) => {
+        if ((t && t.trim()) || b.completed[i]) { total++; if (b.completed[i]) done++; }
+      });
+    });
+    const el = document.getElementById('progress-bar');
+    if (!el) return;
+    if (total === 0) {
+      el.textContent = 'No deeds yet — add tasks below';
+      return;
+    }
+    el.innerHTML = '<span>' + done + '</span> of ' + total + ' deeds completed';
+  }
+
+  let dragSrc = null;
+
+  function render() {
+    const container = document.getElementById('blocks-container');
+    container.innerHTML = '';
+    blocks.forEach((block, bi) => {
+      const blockEl = document.createElement('div');
+      blockEl.className = 'time-block';
+      blockEl.dataset.index = bi;
+      blockEl.innerHTML = `
+        <div class="time-label">${block.time}</div>
+        <div class="task-area" id="task-area-${bi}">
+          ${block.tasks.map((task, ti) => `
+            <div class="task-row" draggable="true" data-bi="${bi}" data-ti="${ti}">
+              <input type="checkbox" class="task-check" ${block.completed[ti] ? 'checked' : ''}
+                onchange="toggleTask(${bi},${ti},this)">
+              <input type="text" class="task-input" placeholder="Record thine deed..."
+                value="${esc(task)}"
+                oninput="updateTask(${bi},${ti},this.value)"
+                onkeydown="handleKey(event,${bi},${ti})"
+                style="${block.completed[ti] ? 'text-decoration:line-through;color:var(--forest);opacity:0.7' : ''}">
+              <button class="task-delete" onclick="deleteTask(${bi},${ti})">✕</button>
+            </div>
+          `).join('')}
+          <button class="add-task-btn" onclick="addTask(${bi})">+ add deed</button>
+        </div>
+        <div class="block-actions">
+          <button class="block-action-btn" onclick="deleteBlock(${bi})" title="Remove hour">✕</button>
+        </div>
+      `;
+      container.appendChild(blockEl);
+      blockEl.querySelector('.task-area').setAttribute('aria-label', 'Tasks for ' + block.time);
+
+      blockEl.querySelectorAll('.task-row').forEach(row => {
+        row.addEventListener('dragstart', e => {
+          dragSrc = { bi: parseInt(row.dataset.bi), ti: parseInt(row.dataset.ti) };
+          row.classList.add('dragging');
+          e.dataTransfer.effectAllowed = 'move';
+          e.dataTransfer.setData('text/plain', '');
+        });
+        row.addEventListener('dragend', () => {
+          row.classList.remove('dragging');
+          document.querySelectorAll('.task-row').forEach(r => r.classList.remove('drag-over'));
+          dragSrc = null;
+        });
+        row.addEventListener('dragover', e => {
+          e.preventDefault();
+          if (dragSrc && !(dragSrc.bi === parseInt(row.dataset.bi) && dragSrc.ti === parseInt(row.dataset.ti))) {
+            row.classList.add('drag-over');
+          }
+        });
+        row.addEventListener('dragleave', () => row.classList.remove('drag-over'));
+        row.addEventListener('drop', e => {
+          e.preventDefault();
+          row.classList.remove('drag-over');
+          if (!dragSrc) return;
+          const toBi = parseInt(row.dataset.bi), toTi = parseInt(row.dataset.ti);
+          const fromBi = dragSrc.bi, fromTi = dragSrc.ti;
+          if (fromBi === toBi && fromTi === toTi) return;
+          const [movedTask] = blocks[fromBi].tasks.splice(fromTi, 1);
+          const movedDone = blocks[fromBi].completed[fromTi] || false;
+          const srcComp = {};
+          Object.keys(blocks[fromBi].completed).forEach(k => {
+            const ki = parseInt(k);
+            if (ki < fromTi) srcComp[ki] = blocks[fromBi].completed[ki];
+            else if (ki > fromTi) srcComp[ki - 1] = blocks[fromBi].completed[ki];
+          });
+          blocks[fromBi].completed = srcComp;
+          if (blocks[fromBi].tasks.length === 0) blocks[fromBi].tasks.push('');
+          const destTi = (fromBi === toBi && fromTi < toTi) ? toTi - 1 : toTi;
+          blocks[toBi].tasks.splice(destTi, 0, movedTask);
+          const dstComp = {};
+          Object.keys(blocks[toBi].completed).forEach(k => {
+            const ki = parseInt(k);
+            if (ki < destTi) dstComp[ki] = blocks[toBi].completed[ki];
+            else dstComp[ki + 1] = blocks[toBi].completed[ki];
+          });
+          dstComp[destTi] = movedDone;
+          blocks[toBi].completed = dstComp;
+          render();
+          save();
+        });
+      });
+
+      const taskArea = blockEl.querySelector('.task-area');
+      taskArea.addEventListener('dragover', e => { e.preventDefault(); });
+      taskArea.addEventListener('drop', e => {
+        e.preventDefault();
+        if (!dragSrc) return;
+        const fromBi = dragSrc.bi, fromTi = dragSrc.ti;
+        if (fromBi === bi && block.tasks.length === 1) return;
+        const [movedTask] = blocks[fromBi].tasks.splice(fromTi, 1);
+        const movedDone = blocks[fromBi].completed[fromTi] || false;
+        const srcComp = {};
+        Object.keys(blocks[fromBi].completed).forEach(k => {
+          const ki = parseInt(k);
+          if (ki < fromTi) srcComp[ki] = blocks[fromBi].completed[ki];
+          else if (ki > fromTi) srcComp[ki - 1] = blocks[fromBi].completed[ki];
+        });
+        blocks[fromBi].completed = srcComp;
+        if (blocks[fromBi].tasks.length === 0) blocks[fromBi].tasks.push('');
+        const insertAt = blocks[bi].tasks.length;
+        blocks[bi].tasks.push(movedTask);
+        blocks[bi].completed[insertAt] = movedDone;
+        render();
+        save();
+      });
+    });
+    updateProgress();
+  }
+
+  function esc(s) { return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+  function updateTask(bi,ti,v) { blocks[bi].tasks[ti]=v; save(); }
+  function toggleTask(bi,ti,cb) {
+    blocks[bi].completed[ti]=cb.checked;
+    const inp = cb.closest('.task-row').querySelector('.task-input');
+    inp.style.textDecoration = cb.checked ? 'line-through' : '';
+    inp.style.color = cb.checked ? 'var(--forest)' : '';
+    inp.style.opacity = cb.checked ? '0.7' : '';
+    save();
+  }
+  function addTask(bi) {
+    blocks[bi].tasks.push('');
+    render();
+    save();
+    setTimeout(()=>{ const a=document.getElementById(`task-area-${bi}`); if(a){const ins=a.querySelectorAll('.task-input'); if(ins.length) ins[ins.length-1].focus();} },30);
+  }
+  function deleteTask(bi,ti) {
+    if(blocks[bi].tasks.length===1){ blocks[bi].tasks[0]=''; blocks[bi].completed[0]=false; render(); return; }
+    blocks[bi].tasks.splice(ti,1);
+    const nc={};
+    Object.keys(blocks[bi].completed).forEach(k=>{ const ki=parseInt(k); if(ki<ti) nc[ki]=blocks[bi].completed[ki]; else if(ki>ti) nc[ki-1]=blocks[bi].completed[ki]; });
+    blocks[bi].completed=nc; render(); save();
+  }
+  function handleKey(e,bi,ti) { if(e.key==='Enter'){ e.preventDefault(); addTask(bi); } }
+  function deleteBlock(bi) { if(blocks.length<=1) return; blocks.splice(bi,1); render(); save(); }
+  function addBlockBefore() {
+    const idx=timeToIndex(blocks[0].time);
+    if(idx>0) { blocks.unshift({time:allTimes[idx-1],tasks:[''],completed:{}}); render(); save(); }
+    else alert('No earlier hour in the chronicles!');
+  }
+  function addBlockAfter() {
+    const idx=timeToIndex(blocks[blocks.length-1].time);
+    if(idx<allTimes.length-1) { blocks.push({time:allTimes[idx+1],tasks:[''],completed:{}}); render(); save(); }
+    else alert('The day is complete!');
+  }
+  function clearAllTasks() {
+    if(!confirm('Erase all deeds from this grimoire?')) return;
+    blocks=blocks.map(b=>({...b,tasks:[''],completed:{}})); render(); save();
+  }
+  load();
+  render();
+</script>
+</body>
+</html>

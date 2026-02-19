@@ -1,0 +1,631 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Daily Grimoire</title>
+<link href="https://fonts.googleapis.com/css2?family=UnifrakturMaguntia&family=IM+Fell+English:ital@0;1&family=Cinzel+Decorative:wght@400;700&family=Cinzel:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --parchment: #f2e8c9;
+    --parchment-dark: #e8d9a8;
+    --parchment-deep: #d4c080;
+    --ink: #1a1208;
+    --ink-faded: #3d2e0e;
+    --crimson: #7a1c1c;
+    --forest: #2d4a2d;
+    --gold: #c8952a;
+    --gold-light: #e8b84b;
+    --purple: #4a2d6b;
+    --border: #8b6914;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: #1a1208;
+    background-image: 
+      radial-gradient(ellipse at 20% 50%, #2d1a08 0%, transparent 50%),
+      radial-gradient(ellipse at 80% 50%, #0d1a0d 0%, transparent 50%);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 2rem 1rem;
+    font-family: 'IM Fell English', serif;
+  }
+
+  /* Outer decorative frame */
+  .grimoire-frame {
+    position: relative;
+    max-width: 680px;
+    width: 100%;
+    background: var(--parchment);
+    background-image: 
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23noise)' opacity='0.08'/%3E%3C/svg%3E");
+    border: 3px solid var(--border);
+    box-shadow: 
+      0 0 0 6px var(--parchment-dark),
+      0 0 0 9px var(--border),
+      0 0 0 12px var(--parchment-deep),
+      0 0 40px rgba(0,0,0,0.8),
+      inset 0 0 60px rgba(0,0,0,0.05);
+    padding: 2.5rem 2rem;
+    animation: pageReveal 1.2s ease-out forwards;
+    opacity: 0;
+  }
+
+  @keyframes pageReveal {
+    from { opacity: 0; transform: translateY(20px) scale(0.98); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
+  }
+
+  /* Corner ornaments using CSS */
+  .grimoire-frame::before,
+  .grimoire-frame::after {
+    content: '✦';
+    position: absolute;
+    font-size: 1.4rem;
+    color: var(--gold);
+    line-height: 1;
+  }
+  .grimoire-frame::before { top: 8px; left: 8px; }
+  .grimoire-frame::after { bottom: 8px; right: 8px; }
+
+  .corner-tl, .corner-tr, .corner-bl, .corner-br {
+    position: absolute;
+    width: 50px;
+    height: 50px;
+    border-color: var(--border);
+    border-style: solid;
+    z-index: 2;
+  }
+  .corner-tl { top: 14px; left: 14px; border-width: 2px 0 0 2px; }
+  .corner-tr { top: 14px; right: 14px; border-width: 2px 2px 0 0; }
+  .corner-bl { bottom: 14px; left: 14px; border-width: 0 0 2px 2px; }
+  .corner-br { bottom: 14px; right: 14px; border-width: 0 2px 2px 0; }
+
+  /* Header */
+  .header {
+    text-align: center;
+    margin-bottom: 1.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 2px solid var(--border);
+    position: relative;
+  }
+
+  .header::after {
+    content: '⁕ ✦ ⁕';
+    display: block;
+    color: var(--gold);
+    font-size: 0.9rem;
+    margin-top: 0.5rem;
+    letter-spacing: 0.5rem;
+  }
+
+  .title {
+    font-family: 'UnifrakturMaguntia', cursive;
+    font-size: 2.8rem;
+    color: var(--ink);
+    text-shadow: 2px 2px 0 var(--parchment-deep);
+    line-height: 1.1;
+    margin-bottom: 0.3rem;
+  }
+
+  .subtitle {
+    font-family: 'Cinzel', serif;
+    font-size: 0.65rem;
+    color: var(--ink-faded);
+    letter-spacing: 0.25rem;
+    text-transform: uppercase;
+  }
+
+  /* Date input row */
+  .date-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    margin-bottom: 1.5rem;
+    font-family: 'Cinzel', serif;
+    font-size: 0.75rem;
+    color: var(--ink-faded);
+    letter-spacing: 0.1rem;
+  }
+
+  .date-row label { text-transform: uppercase; }
+
+  #day-input {
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid var(--border);
+    font-family: 'IM Fell English', serif;
+    font-size: 1rem;
+    color: var(--ink);
+    width: 200px;
+    text-align: center;
+    outline: none;
+    padding: 2px 4px;
+  }
+
+  #day-input::placeholder { color: var(--parchment-deep); font-style: italic; }
+
+  /* Controls */
+  .controls {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 1.5rem;
+    flex-wrap: wrap;
+  }
+
+  .btn {
+    font-family: 'Cinzel', serif;
+    font-size: 0.6rem;
+    letter-spacing: 0.1rem;
+    text-transform: uppercase;
+    padding: 6px 14px;
+    border: 1px solid var(--border);
+    background: var(--parchment-dark);
+    color: var(--ink-faded);
+    cursor: pointer;
+    transition: all 0.2s;
+    position: relative;
+  }
+
+  .btn:hover {
+    background: var(--ink);
+    color: var(--gold-light);
+    border-color: var(--gold);
+  }
+
+  .btn-crimson { border-color: var(--crimson); color: var(--crimson); }
+  .btn-crimson:hover { background: var(--crimson); color: var(--parchment); border-color: var(--crimson); }
+
+  /* Time blocks container */
+  .blocks-container {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+
+  /* Individual time block */
+  .time-block {
+    display: grid;
+    grid-template-columns: 52px 1fr auto;
+    align-items: stretch;
+    min-height: 44px;
+    border-bottom: 1px solid var(--parchment-deep);
+    transition: background 0.15s;
+    position: relative;
+    animation: blockIn 0.3s ease-out forwards;
+  }
+
+  @keyframes blockIn {
+    from { opacity: 0; transform: translateX(-8px); }
+    to { opacity: 1; transform: translateX(0); }
+  }
+
+  .time-block:first-child { border-top: 1px solid var(--parchment-deep); }
+  .time-block:hover { background: rgba(200, 149, 42, 0.06); }
+  .time-block.completed { background: rgba(45, 74, 45, 0.07); }
+  .time-block.completed .task-input { text-decoration: line-through; color: var(--forest); opacity: 0.7; }
+
+  .time-label {
+    font-family: 'Cinzel', serif;
+    font-size: 0.65rem;
+    color: var(--ink-faded);
+    letter-spacing: 0.05rem;
+    padding: 10px 8px 10px 0;
+    display: flex;
+    align-items: center;
+    border-right: 1px solid var(--parchment-deep);
+    margin-right: 12px;
+    white-space: nowrap;
+    user-select: none;
+  }
+
+  .task-area {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    padding: 6px 0;
+    min-width: 0;
+  }
+
+  .task-row {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .task-check {
+    width: 14px;
+    height: 14px;
+    border: 1px solid var(--border);
+    background: transparent;
+    cursor: pointer;
+    flex-shrink: 0;
+    appearance: none;
+    position: relative;
+    transition: all 0.2s;
+  }
+
+  .task-check:checked {
+    background: var(--forest);
+    border-color: var(--forest);
+  }
+
+  .task-check:checked::after {
+    content: '✓';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 9px;
+    color: var(--parchment);
+    line-height: 1;
+  }
+
+  .task-input {
+    flex: 1;
+    background: transparent;
+    border: none;
+    border-bottom: 1px dashed transparent;
+    font-family: 'IM Fell English', serif;
+    font-size: 0.9rem;
+    color: var(--ink);
+    outline: none;
+    padding: 1px 2px;
+    transition: border-color 0.2s;
+    min-width: 0;
+  }
+
+  .task-input:focus { border-bottom-color: var(--gold); }
+  .task-input::placeholder { color: var(--parchment-deep); font-style: italic; }
+
+  .task-delete {
+    background: none;
+    border: none;
+    color: var(--parchment-deep);
+    cursor: pointer;
+    font-size: 0.7rem;
+    padding: 0 2px;
+    line-height: 1;
+    transition: color 0.2s;
+    opacity: 0;
+    flex-shrink: 0;
+  }
+
+  .task-row:hover .task-delete { opacity: 1; }
+  .task-delete:hover { color: var(--crimson); }
+
+  .add-task-btn {
+    background: none;
+    border: none;
+    color: var(--parchment-deep);
+    cursor: pointer;
+    font-family: 'Cinzel', serif;
+    font-size: 0.55rem;
+    letter-spacing: 0.1rem;
+    text-transform: uppercase;
+    padding: 2px 0;
+    text-align: left;
+    transition: color 0.2s;
+  }
+
+  .add-task-btn:hover { color: var(--gold); }
+
+  /* Block controls (right side) */
+  .block-actions {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 3px;
+    padding: 4px 0 4px 8px;
+    opacity: 0;
+    transition: opacity 0.2s;
+  }
+
+  .time-block:hover .block-actions { opacity: 1; }
+
+  .block-action-btn {
+    background: none;
+    border: none;
+    color: var(--parchment-deep);
+    cursor: pointer;
+    font-size: 0.7rem;
+    line-height: 1;
+    padding: 1px 3px;
+    transition: color 0.15s;
+  }
+
+  .block-action-btn:hover { color: var(--crimson); }
+
+  /* Add block section */
+  .add-block-row {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--border);
+    flex-wrap: wrap;
+  }
+
+  .time-select {
+    font-family: 'Cinzel', serif;
+    font-size: 0.65rem;
+    background: var(--parchment-dark);
+    border: 1px solid var(--border);
+    color: var(--ink);
+    padding: 5px 8px;
+    cursor: pointer;
+    outline: none;
+    letter-spacing: 0.05rem;
+  }
+
+  /* Footer ornament */
+  .footer-ornament {
+    text-align: center;
+    margin-top: 1.5rem;
+    padding-top: 1rem;
+    border-top: 2px solid var(--border);
+    font-family: 'UnifrakturMaguntia', cursive;
+    font-size: 1.2rem;
+    color: var(--gold);
+    letter-spacing: 0.5rem;
+  }
+
+  /* Drag styles */
+  .time-block.drag-over { 
+    background: rgba(200,149,42,0.15);
+    border-top: 2px dashed var(--gold);
+  }
+  .time-block[draggable="true"] { cursor: grab; }
+
+  /* Scrollbar */
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: var(--parchment-dark); }
+  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 0; }
+
+  .initial-label {
+    font-family: 'Cinzel', serif;
+    font-size: 0.6rem;
+    color: var(--gold);
+    letter-spacing: 0.1rem;
+    text-transform: uppercase;
+    margin-bottom: 0.4rem;
+  }
+
+  .divider-vine {
+    text-align: center;
+    color: var(--gold);
+    font-size: 0.85rem;
+    letter-spacing: 0.3rem;
+    margin: 0.4rem 0;
+    opacity: 0.6;
+  }
+</style>
+</head>
+<body>
+
+<div class="grimoire-frame">
+  <div class="corner-tl"></div>
+  <div class="corner-tr"></div>
+  <div class="corner-bl"></div>
+  <div class="corner-br"></div>
+
+  <div class="header">
+    <div class="title">The Daily Grimoire</div>
+    <div class="subtitle">A Chronicle of Hours & Deeds</div>
+  </div>
+
+  <div class="date-row">
+    <label for="day-input">Day:</label>
+    <input type="text" id="day-input" placeholder="Name thy day..." />
+  </div>
+
+  <div class="controls">
+    <button class="btn" onclick="addBlockBefore()">+ Add Hour Before</button>
+    <button class="btn" onclick="addBlockAfter()">+ Add Hour After</button>
+    <button class="btn btn-crimson" onclick="clearAllTasks()">✕ Clear All Tasks</button>
+  </div>
+
+  <div class="blocks-container" id="blocks-container"></div>
+
+  <div class="footer-ornament">✦ ⁕ ✦ ⁕ ✦</div>
+</div>
+
+<script>
+  // Default time blocks 8am–8pm
+  const defaultTimes = [
+    '8am','9am','10am','11am','12pm',
+    '1pm','2pm','3pm','4pm','5pm','6pm','7pm','8pm'
+  ];
+
+  // State
+  let blocks = defaultTimes.map(t => ({ time: t, tasks: [''] }));
+
+  // All possible times for add before/after
+  const allTimes = [
+    '12am','1am','2am','3am','4am','5am','6am','7am',
+    '8am','9am','10am','11am','12pm',
+    '1pm','2pm','3pm','4pm','5pm','6pm','7pm','8pm',
+    '9pm','10pm','11pm'
+  ];
+
+  function timeToIndex(t) {
+    return allTimes.indexOf(t);
+  }
+
+  function render() {
+    const container = document.getElementById('blocks-container');
+    container.innerHTML = '';
+    blocks.forEach((block, bi) => {
+      const blockEl = document.createElement('div');
+      blockEl.className = 'time-block';
+      blockEl.dataset.index = bi;
+      blockEl.draggable = true;
+
+      // Check if all non-empty tasks are done
+      const nonEmpty = block.tasks.filter(t => t.trim() !== '');
+      const allDone = nonEmpty.length > 0 && nonEmpty.every((t, i) => {
+        // We need to check checkboxes - use a data attribute approach
+        return false; // handled via DOM check
+      });
+
+      blockEl.innerHTML = `
+        <div class="time-label">${block.time}</div>
+        <div class="task-area" id="task-area-${bi}">
+          ${block.tasks.map((task, ti) => `
+            <div class="task-row" data-bi="${bi}" data-ti="${ti}">
+              <input type="checkbox" class="task-check" ${block.completed && block.completed[ti] ? 'checked' : ''} onchange="toggleTask(${bi},${ti},this)">
+              <input type="text" class="task-input" placeholder="Record thine deed..." value="${escHtml(task)}" 
+                oninput="updateTask(${bi},${ti},this.value)"
+                onkeydown="handleTaskKey(event,${bi},${ti})">
+              <button class="task-delete" onclick="deleteTask(${bi},${ti})" title="Remove">✕</button>
+            </div>
+          `).join('')}
+          <button class="add-task-btn" onclick="addTask(${bi})">+ add deed</button>
+        </div>
+        <div class="block-actions">
+          <button class="block-action-btn" onclick="deleteBlock(${bi})" title="Remove this hour">✕</button>
+        </div>
+      `;
+
+      // Update completed state from DOM after render
+      container.appendChild(blockEl);
+
+      // Drag events
+      blockEl.addEventListener('dragstart', e => {
+        e.dataTransfer.setData('text/plain', bi);
+        blockEl.style.opacity = '0.5';
+      });
+      blockEl.addEventListener('dragend', () => {
+        blockEl.style.opacity = '1';
+        document.querySelectorAll('.time-block').forEach(el => el.classList.remove('drag-over'));
+      });
+      blockEl.addEventListener('dragover', e => {
+        e.preventDefault();
+        blockEl.classList.add('drag-over');
+      });
+      blockEl.addEventListener('dragleave', () => blockEl.classList.remove('drag-over'));
+      blockEl.addEventListener('drop', e => {
+        e.preventDefault();
+        blockEl.classList.remove('drag-over');
+        const fromIdx = parseInt(e.dataTransfer.getData('text/plain'));
+        const toIdx = bi;
+        if (fromIdx !== toIdx) {
+          const moved = blocks.splice(fromIdx, 1)[0];
+          blocks.splice(toIdx, 0, moved);
+          render();
+        }
+      });
+    });
+  }
+
+  function escHtml(s) {
+    return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+
+  function updateTask(bi, ti, val) {
+    blocks[bi].tasks[ti] = val;
+  }
+
+  function toggleTask(bi, ti, checkbox) {
+    if (!blocks[bi].completed) blocks[bi].completed = {};
+    blocks[bi].completed[ti] = checkbox.checked;
+    // strike through visually
+    const row = checkbox.closest('.task-row');
+    const input = row.querySelector('.task-input');
+    if (checkbox.checked) {
+      input.style.textDecoration = 'line-through';
+      input.style.color = 'var(--forest)';
+      input.style.opacity = '0.7';
+    } else {
+      input.style.textDecoration = '';
+      input.style.color = '';
+      input.style.opacity = '';
+    }
+  }
+
+  function addTask(bi) {
+    blocks[bi].tasks.push('');
+    render();
+    // Focus the new input
+    setTimeout(() => {
+      const area = document.getElementById(`task-area-${bi}`);
+      if (area) {
+        const inputs = area.querySelectorAll('.task-input');
+        if (inputs.length) inputs[inputs.length - 1].focus();
+      }
+    }, 50);
+  }
+
+  function deleteTask(bi, ti) {
+    if (blocks[bi].tasks.length === 1) {
+      blocks[bi].tasks[0] = '';
+      render();
+      return;
+    }
+    blocks[bi].tasks.splice(ti, 1);
+    if (blocks[bi].completed) {
+      const newComp = {};
+      Object.keys(blocks[bi].completed).forEach(k => {
+        const ki = parseInt(k);
+        if (ki < ti) newComp[ki] = blocks[bi].completed[ki];
+        else if (ki > ti) newComp[ki - 1] = blocks[bi].completed[ki];
+      });
+      blocks[bi].completed = newComp;
+    }
+    render();
+  }
+
+  function handleTaskKey(e, bi, ti) {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      addTask(bi);
+    }
+  }
+
+  function deleteBlock(bi) {
+    if (blocks.length <= 1) return;
+    blocks.splice(bi, 1);
+    render();
+  }
+
+  function addBlockBefore() {
+    const firstTime = blocks[0].time;
+    const idx = timeToIndex(firstTime);
+    if (idx > 0) {
+      const newTime = allTimes[idx - 1];
+      blocks.unshift({ time: newTime, tasks: [''] });
+      render();
+    } else {
+      alert('No earlier hour in the chronicles!');
+    }
+  }
+
+  function addBlockAfter() {
+    const lastTime = blocks[blocks.length - 1].time;
+    const idx = timeToIndex(lastTime);
+    if (idx < allTimes.length - 1) {
+      const newTime = allTimes[idx + 1];
+      blocks.push({ time: newTime, tasks: [''] });
+      render();
+    } else {
+      alert('The day is complete — no more hours remain!');
+    }
+  }
+
+  function clearAllTasks() {
+    if (!confirm('Erase all deeds from this grimoire?')) return;
+    blocks = blocks.map(b => ({ ...b, tasks: [''], completed: {} }));
+    render();
+  }
+
+  render();
+</script>
+</body>
+</html>

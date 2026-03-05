@@ -1,1 +1,374 @@
-{}
+{
+  "grimoire": {
+    "day": "",
+    "blocks": [
+      {
+        "time": "8am",
+        "tasks": [
+          ""
+        ],
+        "completed": {}
+      },
+      {
+        "time": "9am",
+        "tasks": [
+          ""
+        ],
+        "completed": {}
+      },
+      {
+        "time": "10am",
+        "tasks": [
+          ""
+        ],
+        "completed": {}
+      },
+      {
+        "time": "11am",
+        "tasks": [
+          ""
+        ],
+        "completed": {}
+      },
+      {
+        "time": "12pm",
+        "tasks": [
+          ""
+        ],
+        "completed": {}
+      },
+      {
+        "time": "1pm",
+        "tasks": [
+          ""
+        ],
+        "completed": {}
+      },
+      {
+        "time": "2pm",
+        "tasks": [
+          ""
+        ],
+        "completed": {}
+      },
+      {
+        "time": "3pm",
+        "tasks": [
+          ""
+        ],
+        "completed": {}
+      },
+      {
+        "time": "4pm",
+        "tasks": [
+          ""
+        ],
+        "completed": {}
+      },
+      {
+        "time": "5pm",
+        "tasks": [
+          ""
+        ],
+        "completed": {}
+      },
+      {
+        "time": "6pm",
+        "tasks": [
+          ""
+        ],
+        "completed": {}
+      },
+      {
+        "time": "7pm",
+        "tasks": [
+          ""
+        ],
+        "completed": {}
+      },
+      {
+        "time": "8pm",
+        "tasks": [
+          ""
+        ],
+        "completed": {}
+      }
+    ],
+    "dateKey": "2026-03-05"
+  },
+  "history": {
+    "2026-03-04": {
+      "day": "Wednesday, 4 March 2026",
+      "blocks": [
+        {
+          "time": "8am",
+          "tasks": [
+            ""
+          ],
+          "completed": {}
+        },
+        {
+          "time": "9am",
+          "tasks": [
+            ""
+          ],
+          "completed": {}
+        },
+        {
+          "time": "10am",
+          "tasks": [
+            ""
+          ],
+          "completed": {}
+        },
+        {
+          "time": "11am",
+          "tasks": [
+            "Catching up"
+          ],
+          "completed": {
+            "0": true
+          }
+        },
+        {
+          "time": "12pm",
+          "tasks": [
+            "the daily tracking gamification"
+          ],
+          "completed": {
+            "0": true
+          }
+        },
+        {
+          "time": "1pm",
+          "tasks": [
+            ""
+          ],
+          "completed": {}
+        },
+        {
+          "time": "3pm",
+          "tasks": [
+            ""
+          ],
+          "completed": {}
+        },
+        {
+          "time": "4pm",
+          "tasks": [
+            ""
+          ],
+          "completed": {}
+        },
+        {
+          "time": "5pm",
+          "tasks": [
+            ""
+          ],
+          "completed": {}
+        },
+        {
+          "time": "6pm",
+          "tasks": [
+            ""
+          ],
+          "completed": {}
+        },
+        {
+          "time": "7pm",
+          "tasks": [
+            ""
+          ],
+          "completed": {}
+        },
+        {
+          "time": "8pm",
+          "tasks": [
+            ""
+          ],
+          "completed": {}
+        }
+      ],
+      "savedAt": "2026-03-05T03:58:34.095Z",
+      "total": 2,
+      "done": 2,
+      "dateKey": "2026-03-04",
+      "autoSaved": true
+    }
+  },
+  "punchCards": [
+    {
+      "id": 1772618170928,
+      "name": "Life shelf",
+      "target": 14,
+      "reward": "A cute kitchen item",
+      "punches": 2,
+      "completed": false,
+      "color": "card-color-0",
+      "linkedDeed": {
+        "bi": 0,
+        "name": "Life shelf"
+      },
+      "bingoSource": null
+    },
+    {
+      "id": 1772621878534,
+      "name": "3000",
+      "target": 1,
+      "reward": "A well-earned rest",
+      "punches": 0,
+      "completed": false,
+      "color": "card-color-1",
+      "linkedDeed": null,
+      "bingoSource": {
+        "bingoCardId": 1772621878533,
+        "squareIdx": 0
+      }
+    },
+    {
+      "id": 1772621878536,
+      "name": "Book 1& 2 reflection",
+      "target": 1,
+      "reward": "A well-earned rest",
+      "punches": 0,
+      "completed": false,
+      "color": "card-color-2",
+      "linkedDeed": null,
+      "bingoSource": {
+        "bingoCardId": 1772621878533,
+        "squareIdx": 1
+      }
+    },
+    {
+      "id": 1772621878537,
+      "name": "Substack",
+      "target": 1,
+      "reward": "A well-earned rest",
+      "punches": 0,
+      "completed": false,
+      "color": "card-color-3",
+      "linkedDeed": null,
+      "bingoSource": {
+        "bingoCardId": 1772621878533,
+        "squareIdx": 2
+      }
+    },
+    {
+      "id": 1772621878538,
+      "name": "Fin",
+      "target": 1,
+      "reward": "A well-earned rest",
+      "punches": 0,
+      "completed": false,
+      "color": "card-color-4",
+      "linkedDeed": null,
+      "bingoSource": {
+        "bingoCardId": 1772621878533,
+        "squareIdx": 3
+      }
+    },
+    {
+      "id": 1772621878540,
+      "name": "Shadows",
+      "target": 1,
+      "reward": "A well-earned rest",
+      "punches": 0,
+      "completed": false,
+      "color": "card-color-5",
+      "linkedDeed": null,
+      "bingoSource": {
+        "bingoCardId": 1772621878533,
+        "squareIdx": 5
+      }
+    },
+    {
+      "id": 1772621878541,
+      "name": "Book 1 reflection",
+      "target": 1,
+      "reward": "A well-earned rest",
+      "punches": 0,
+      "completed": false,
+      "color": "card-color-0",
+      "linkedDeed": null,
+      "bingoSource": {
+        "bingoCardId": 1772621878533,
+        "squareIdx": 6
+      }
+    },
+    {
+      "id": 1772621878542,
+      "name": "Tasks",
+      "target": 1,
+      "reward": "A well-earned rest",
+      "punches": 0,
+      "completed": false,
+      "color": "card-color-1",
+      "linkedDeed": {
+        "bi": 0,
+        "name": "Tasks"
+      },
+      "bingoSource": {
+        "bingoCardId": 1772621878533,
+        "squareIdx": 7
+      }
+    },
+    {
+      "id": 1772621878543,
+      "name": "Journal",
+      "target": 1,
+      "reward": "A well-earned rest",
+      "punches": 0,
+      "completed": false,
+      "color": "card-color-2",
+      "linkedDeed": null,
+      "bingoSource": {
+        "bingoCardId": 1772621878533,
+        "squareIdx": 8
+      }
+    }
+  ],
+  "bingoCards": [
+    {
+      "id": 1772621878533,
+      "title": "Setup",
+      "pool": [
+        "Book 1 & 2reflection",
+        "Twitch",
+        "Substack",
+        "3000",
+        "Tasks",
+        "Fin",
+        "Journal",
+        "Shadows"
+      ],
+      "squares": [
+        "3000",
+        "Book 2 reflection",
+        "Substack",
+        "Fin",
+        "__FREE__",
+        "Shadows",
+        "Book 1 reflection",
+        "Tasks",
+        "Journal"
+      ],
+      "marked": [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false
+      ],
+      "color": "bingo-color-0",
+      "colorIdx": 0,
+      "completed": false,
+      "reward": "Ipad case like stand"
+    }
+  ],
+  "lastSynced": "2026-03-05T04:12:54.629Z",
+  "version": 1
+}

@@ -42,9 +42,14 @@
       {
         "time": "1pm",
         "tasks": [
+          "Life shelf",
+          "",
           ""
         ],
-        "completed": {}
+        "completed": {
+          "0": false,
+          "2": false
+        }
       }
     ],
     "dateKey": "2026-03-05"
@@ -155,7 +160,7 @@
       "name": "Life shelf",
       "target": 14,
       "reward": "A cute kitchen item",
-      "punches": 2,
+      "punches": 3,
       "completed": false,
       "color": "card-color-0",
       "linkedDeed": {
@@ -322,6 +327,6 @@
       "reward": "Ipad case like stand"
     }
   ],
-  "lastSynced": "2026-03-05T09:33:23.672Z",
+  "lastSynced": "2026-03-05T09:38:49.135Z",
   "version": 1
 }

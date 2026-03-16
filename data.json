@@ -12,25 +12,23 @@
       {
         "time": "9am",
         "tasks": [
-          "Github"
+          ""
         ],
         "completed": {}
       },
       {
         "time": "10am",
         "tasks": [
-          "PPT data validation"
+          ""
         ],
         "completed": {}
       },
       {
-        "time": "11pm",
+        "time": "11am",
         "tasks": [
-          "Tasks"
+          ""
         ],
-        "completed": {
-          "0": false
-        }
+        "completed": {}
       },
       {
         "time": "12pm",
@@ -42,17 +40,63 @@
       {
         "time": "1pm",
         "tasks": [
-          "Life shelf",
-          "",
           ""
         ],
+        "completed": {}
+      },
+      {
+        "time": "2pm",
+        "tasks": [
+          "Book 1 reflection"
+        ],
         "completed": {
-          "0": false,
-          "2": false
+          "0": true
         }
+      },
+      {
+        "time": "3pm",
+        "tasks": [
+          ""
+        ],
+        "completed": {}
+      },
+      {
+        "time": "4pm",
+        "tasks": [
+          ""
+        ],
+        "completed": {}
+      },
+      {
+        "time": "5pm",
+        "tasks": [
+          ""
+        ],
+        "completed": {}
+      },
+      {
+        "time": "6pm",
+        "tasks": [
+          ""
+        ],
+        "completed": {}
+      },
+      {
+        "time": "7pm",
+        "tasks": [
+          ""
+        ],
+        "completed": {}
+      },
+      {
+        "time": "8pm",
+        "tasks": [
+          ""
+        ],
+        "completed": {}
       }
     ],
-    "dateKey": "2026-03-05"
+    "dateKey": "2026-03-16"
   },
   "history": {
     "2026-03-04": {
@@ -218,7 +262,7 @@
       "name": "Life shelf",
       "target": 14,
       "reward": "A cute kitchen item",
-      "punches": 3,
+      "punches": 4,
       "completed": false,
       "color": "card-color-0",
       "linkedDeed": {
@@ -243,7 +287,7 @@
     },
     {
       "id": 1772621878536,
-      "name": "Book 1& 2 reflection",
+      "name": "Book 2 reflection",
       "target": 1,
       "reward": "A well-earned rest",
       "punches": 0,
@@ -302,10 +346,13 @@
       "name": "Book 1 reflection",
       "target": 1,
       "reward": "A well-earned rest",
-      "punches": 0,
-      "completed": false,
+      "punches": 1,
+      "completed": true,
       "color": "card-color-0",
-      "linkedDeed": null,
+      "linkedDeed": {
+        "bi": 0,
+        "name": "Book 1 reflection"
+      },
       "bingoSource": {
         "bingoCardId": 1772621878533,
         "squareIdx": 6
@@ -316,8 +363,8 @@
       "name": "Tasks",
       "target": 1,
       "reward": "A well-earned rest",
-      "punches": 0,
-      "completed": false,
+      "punches": 1,
+      "completed": true,
       "color": "card-color-1",
       "linkedDeed": {
         "bi": 0,
@@ -373,10 +420,10 @@
         false,
         false,
         false,
+        true,
         false,
-        false,
-        false,
-        false,
+        true,
+        true,
         false
       ],
       "color": "bingo-color-0",
@@ -385,6 +432,6 @@
       "reward": "Ipad case like stand"
     }
   ],
-  "lastSynced": "2026-03-16T07:56:42.862Z",
+  "lastSynced": "2026-03-16T08:26:50.317Z",
   "version": 1
 }
